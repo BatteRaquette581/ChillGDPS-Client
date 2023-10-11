@@ -25,7 +25,7 @@ A simple lightweight ChillGDPS-focused mod menu for Geode.
 
 ## Installation
 
-1. Download the latest release (or any version you want) from the [releases page](https://github.com/BatteRaquette581/ChillGDPS-Client/releases) (your geode version **must be** v1.3.5 or later).
+1. Download the .geode file from latest release (or any version you want) from the [releases page](https://github.com/BatteRaquette581/ChillGDPS-Client/releases) (your geode version **must be** v1.3.5 or later).
 2. Make sure Geode is installed on your game (***WARNING: Geode as of the making of this release, is incompatible with other mod menus*** (see appendix for more info)), if not, install it here https://geode-sdk.org/install/.
 3. Go to the directory of your game, go into the "geode" folder (if not present, launch the game, then come back), to "mods", and then put the batteraquette58.chillgdps_client.geode file in there.
 4. Launch and enjoy!
