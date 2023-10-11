@@ -1,0 +1,15 @@
+{
+	"geode": "1.3.5",
+	"version": "v1.0.0-beta.1",
+	"id": "batteraquette58.chillgdps_client",
+	"name": "ChillGDPS Client",
+	"developer": "BatteRaquette58",
+	"description": "A mod menu specifically made for ChillGDPS.",
+	"resources": {
+        "spritesheets": {
+            "ChillGDPS Client": [
+                "resources/*.png"
+            ]
+        }
+	}
+}
