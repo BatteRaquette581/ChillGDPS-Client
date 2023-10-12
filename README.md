@@ -15,6 +15,7 @@ A simple lightweight ChillGDPS-focused mod menu for Geode.
 
 ## Features
 
+- Cross platform (Windows/Mac, Android and iOS to come)
 - Editor hacks, player hacks, and more! (see first screenshot)
 - ChillGDPS MyDemon button (see second screenshot)
 - even more to come!
@@ -48,4 +49,3 @@ To use MyDemon, click on the button shown here (in the level searching menu).
 
 - For now, ChillGDPS Client (and Geode as a whole) is incompatible with GDHM or Mega Hack (though mhv8 will be in Geode).
 - Safe Mode is automatically activated when using ChillGDPS Client Noclip.
-- Windows only (mac can be supported)

@@ -8,18 +8,30 @@ using namespace geode::prelude;
 bool reset = false;
 bool safe_mode_toggled = false;
 
+bool ac_level_kick_bypass_toggled = false;
+bool icon_bypass_toggled = false;
+bool noclip_toggled = false;
+bool practice_music_toggled = false;
+bool slider_limit_toggled = false;
+bool ignore_esc_toggled = false;
+bool object_bypass_toggled = false;
+bool song_bypass_toggled = false;
+
 bool ChillClientLayer::init() {
     if (!CCLayer::init())
         return false;
     
     setZOrder(100);
 
-    //ac_level_kick_bypass_toggled = mod->getSavedValue<bool>("ac-level-kick-bypass");
-    //icon_bypass_toggled = mod->getSavedValue<bool>("icon-bypass");
-    //noclip_toggled = mod->getSavedValue<bool>("noclip");
-    //safe_mode_toggled = mod->getSavedValue<bool>("safe-mode");
-    //practice_music_toggled = mod->getSavedValue<bool>("practice-music");
-    //slider_limit_toggled = mod->getSavedValue<bool>("slider-limit");
+    ac_level_kick_bypass_toggled = mod->getSavedValue<bool>("ac-level-kick-bypass");
+    icon_bypass_toggled = mod->getSavedValue<bool>("icon-bypass");
+    noclip_toggled = mod->getSavedValue<bool>("noclip");
+    safe_mode_toggled = mod->getSavedValue<bool>("safe-mode");
+    practice_music_toggled = mod->getSavedValue<bool>("practice-music");
+    slider_limit_toggled = mod->getSavedValue<bool>("slider-limit");
+    ignore_esc_toggled = mod->getSavedValue<bool>("ignore-esc");
+    object_bypass_toggled = mod->getSavedValue<bool>("object-bypass");
+    song_bypass_toggled = mod->getSavedValue<bool>("song-bypass");
 
     return true;
 }
@@ -71,13 +83,13 @@ void ChillClientLayer::onButtonClick(CCObject* sender) {
 
         auto top_label = CCLabelBMFont::create("ChillGDPS Client", "bigFont.fnt");
         ccColor3B top_label_color(0, 255, 255);
-        top_label->setPosition(ccp(size.width * 0.7, size.height * 0.835));
+        top_label->setPosition(ccp(size.width * 0.5, size.height * 0.835));
         top_label->setColor(top_label_color);
         top_label->setZOrder(11);
 	    menu->addChild(top_label);
 
-        auto ac_bypass_label = CCLabelBMFont::create("Disable Level Kick", "bigFont.fnt");
-        ac_bypass_label->setScale(0.7);
+        auto ac_bypass_label = CCLabelBMFont::create("Level Kick Bypass", "bigFont.fnt");
+        ac_bypass_label->setScale(0.5);
         ac_bypass_label->setPosition(size.width * 0.3, size.height * 0.7);
         ac_bypass_label->setZOrder(11);
         menu->addChild(ac_bypass_label);
@@ -93,7 +105,7 @@ void ChillClientLayer::onButtonClick(CCObject* sender) {
 
         auto icon_bypass_label = CCLabelBMFont::create("Icon Bypass", "bigFont.fnt");
         icon_bypass_label->setZOrder(11);
-        icon_bypass_label->setScale(0.7);
+        icon_bypass_label->setScale(0.55);
         icon_bypass_label->setPosition(size.width * 0.3, size.height * 0.6);
         menu->addChild(icon_bypass_label);
 
@@ -108,7 +120,7 @@ void ChillClientLayer::onButtonClick(CCObject* sender) {
 
         auto safe_mode_label = CCLabelBMFont::create("Safe Mode", "bigFont.fnt");
         safe_mode_label->setZOrder(11);
-        safe_mode_label->setScale(0.7);
+        safe_mode_label->setScale(0.55);
         safe_mode_label->setPosition(size.width * 0.3, size.height * 0.5);
         menu->addChild(safe_mode_label);
 
@@ -123,7 +135,7 @@ void ChillClientLayer::onButtonClick(CCObject* sender) {
 
         auto noclip_label = CCLabelBMFont::create("Noclip", "bigFont.fnt");
         noclip_label->setZOrder(11);
-        noclip_label->setScale(0.7);
+        noclip_label->setScale(0.55);
         noclip_label->setPosition(size.width * 0.3, size.height * 0.4);
         menu->addChild(noclip_label);
 
@@ -152,7 +164,7 @@ void ChillClientLayer::onButtonClick(CCObject* sender) {
 
         auto slider_limit_label = CCLabelBMFont::create("Slider Limit", "bigFont.fnt");
         slider_limit_label->setZOrder(11);
-        slider_limit_label->setScale(0.7);
+        slider_limit_label->setScale(0.55);
         slider_limit_label->setPosition(size.width * 0.3, size.height * 0.3);
         menu->addChild(slider_limit_label);
 
@@ -167,7 +179,7 @@ void ChillClientLayer::onButtonClick(CCObject* sender) {
 
         auto ignore_esc_label = CCLabelBMFont::create("Prevent Exiting", "bigFont.fnt");
         ignore_esc_label->setZOrder(11);
-        ignore_esc_label->setScale(0.7);
+        ignore_esc_label->setScale(0.55);
         ignore_esc_label->setPosition(size.width * 0.3, size.height * 0.2);
         menu->addChild(ignore_esc_label);
 
@@ -181,13 +193,13 @@ void ChillClientLayer::onButtonClick(CCObject* sender) {
         menu->addChild(ignore_esc_toggler);
 
         auto object_bypass_label = CCLabelBMFont::create("Object Bypass", "bigFont.fnt");
-        object_bypass_label->setScale(0.7);
-        object_bypass_label->setPosition(size.width * 0.6, size.height * 0.7);
+        object_bypass_label->setScale(0.55);
+        object_bypass_label->setPosition(size.width * 0.65, size.height * 0.7);
         object_bypass_label->setZOrder(11);
         menu->addChild(object_bypass_label);
 
         auto object_bypass_toggler = CCMenuItemToggler::createWithStandardSprites(this, menu_selector(ChillClientLayer::handleToggler), 1);
-        object_bypass_toggler->setPosition(size.width * 0.75, size.height * 0.7);
+        object_bypass_toggler->setPosition(size.width * 0.8, size.height * 0.7);
         object_bypass_toggler->setScale(0.7);
         object_bypass_toggler->setTag(8);
         object_bypass_toggler->setZOrder(11);
@@ -196,13 +208,13 @@ void ChillClientLayer::onButtonClick(CCObject* sender) {
         menu->addChild(object_bypass_toggler);
 
         auto song_bypass_label = CCLabelBMFont::create("Song Bypass", "bigFont.fnt");
-        song_bypass_label->setScale(0.7);
-        song_bypass_label->setPosition(size.width * 0.6, size.height * 0.6);
+        song_bypass_label->setScale(0.55);
+        song_bypass_label->setPosition(size.width * 0.65, size.height * 0.6);
         song_bypass_label->setZOrder(11);
         menu->addChild(song_bypass_label);
 
         auto song_bypass_toggler = CCMenuItemToggler::createWithStandardSprites(this, menu_selector(ChillClientLayer::handleToggler), 1);
-        song_bypass_toggler->setPosition(size.width * 0.75, size.height * 0.6);
+        song_bypass_toggler->setPosition(size.width * 0.8, size.height * 0.6);
         song_bypass_toggler->setScale(0.7);
         song_bypass_toggler->setTag(9);
         song_bypass_toggler->setZOrder(11);
