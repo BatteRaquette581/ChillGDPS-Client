@@ -1,9 +1,17 @@
+#include <chrono>
 #include <Geode/Geode.hpp>
 #include <Geode/modify/PlayLayer.hpp>
+#include <Geode/modify/GJBaseGameLayer.hpp>
 #include "ChillClientLayer.hpp"
 #include "patcher.hpp"
 
+
 using namespace geode::prelude;
+
+
+CCDirector* shared_director = CCDirector::sharedDirector();
+int clicks = 0;
+auto previous = std::chrono::system_clock::now();
 
 bool reset = false;
 bool safe_mode_toggled = false;
@@ -16,12 +24,35 @@ bool slider_limit_toggled = false;
 bool ignore_esc_toggled = false;
 bool object_bypass_toggled = false;
 bool song_bypass_toggled = false;
+bool cps_counter_toggled = false;
+
+$execute {
+    ac_level_kick_bypass_toggled = mod->getSavedValue<bool>("ac-level-kick-bypass");
+    icon_bypass_toggled = mod->getSavedValue<bool>("icon-bypass");
+    noclip_toggled = mod->getSavedValue<bool>("noclip");
+    safe_mode_toggled = mod->getSavedValue<bool>("safe-mode");
+    practice_music_toggled = mod->getSavedValue<bool>("practice-music");
+    slider_limit_toggled = mod->getSavedValue<bool>("slider-limit");
+    ignore_esc_toggled = mod->getSavedValue<bool>("ignore-esc");
+    object_bypass_toggled = mod->getSavedValue<bool>("object-bypass");
+    song_bypass_toggled = mod->getSavedValue<bool>("song-bypass");
+    cps_counter_toggled = mod->getSavedValue<bool>("cps-counter");
+
+    toggle_icon_bypass(icon_bypass_toggled);
+    toggle_noclip(noclip_toggled);
+    toggle_practice_music(practice_music_toggled);
+    toggle_slider_limit(slider_limit_toggled);
+    toggle_ignore_esc(ignore_esc_toggled);
+    toggle_object_bypass(object_bypass_toggled);
+    toggle_song_bypass(cps_counter_toggled);
+}
 
 bool ChillClientLayer::init() {
     if (!CCLayer::init())
         return false;
     
     setZOrder(100);
+    setTouchPriority(100);
 
     ac_level_kick_bypass_toggled = mod->getSavedValue<bool>("ac-level-kick-bypass");
     icon_bypass_toggled = mod->getSavedValue<bool>("icon-bypass");
@@ -32,6 +63,7 @@ bool ChillClientLayer::init() {
     ignore_esc_toggled = mod->getSavedValue<bool>("ignore-esc");
     object_bypass_toggled = mod->getSavedValue<bool>("object-bypass");
     song_bypass_toggled = mod->getSavedValue<bool>("song-bypass");
+    cps_counter_toggled = mod->getSavedValue<bool>("cps-counter");
 
     return true;
 }
@@ -64,7 +96,8 @@ void ChillClientLayer::setButtonPosition(CCPoint pos) {
 void ChillClientLayer::onButtonClick(CCObject* sender) {
     auto menu = getChildByID("menu"_spr);
     if (menu == nullptr) {
-        CCSize size = CCDirector::sharedDirector()->getWinSize();
+        CCSize size = shared_director->getWinSize();
+
         menu = CCMenu::create();
         menu->setPosition(ccp(0, 0));
         menu->setID("menu"_spr);
@@ -148,19 +181,19 @@ void ChillClientLayer::onButtonClick(CCObject* sender) {
         //ChillClientLayer::handleToggler(noclip_toggler);
         menu->addChild(noclip_toggler);
 
-        //auto practice_music_label = CCLabelBMFont::create("Practice Music", "bigFont.fnt");
-        //practice_music_label->setZOrder(11);
-        //practice_music_label->setScale(0.7);
-        //practice_music_label->setPosition(size.width * 0.3, size.height * 0.3);
-        //menu->addChild(practice_music_label);
-//
-        //auto practice_music_toggler = CCMenuItemToggler::createWithStandardSprites(this, menu_selector(ChillClientLayer::handleToggler), 1);
-        //practice_music_toggler->setZOrder(11);
-        //practice_music_toggler->setScale(0.7);
-        //practice_music_toggler->setPosition(size.width * 0.46, size.height * 0.3);
-        //practice_music_toggler->setTag(5);
-        //practice_music_toggler->toggle(practice_music_toggled);
-        //menu->addChild(practice_music_toggler);
+        auto practice_music_label = CCLabelBMFont::create("Practice Music", "bigFont.fnt");
+        practice_music_label->setZOrder(11);
+        practice_music_label->setScale(0.55);
+        practice_music_label->setPosition(size.width * 0.65, size.height * 0.5);
+        menu->addChild(practice_music_label);
+
+        auto practice_music_toggler = CCMenuItemToggler::createWithStandardSprites(this, menu_selector(ChillClientLayer::handleToggler), 1);
+        practice_music_toggler->setZOrder(11);
+        practice_music_toggler->setScale(0.7);
+        practice_music_toggler->setPosition(size.width * 0.8, size.height * 0.5);
+        practice_music_toggler->setTag(5);
+        practice_music_toggler->toggle(practice_music_toggled);
+        menu->addChild(practice_music_toggler);
 
         auto slider_limit_label = CCLabelBMFont::create("Slider Limit", "bigFont.fnt");
         slider_limit_label->setZOrder(11);
@@ -222,6 +255,21 @@ void ChillClientLayer::onButtonClick(CCObject* sender) {
         //ChillClientLayer::handleToggler(ac_bypass_toggler);
         menu->addChild(song_bypass_toggler);
 
+        /*auto cps_counter_label = CCLabelBMFont::create("CPS Counter", "bigFont.fnt");
+        cps_counter_label->setScale(0.55);
+        cps_counter_label->setPosition(size.width * 0.65, size.height * 0.5);
+        cps_counter_label->setZOrder(11);
+        menu->addChild(cps_counter_label);
+
+        auto cps_counter_toggler = CCMenuItemToggler::createWithStandardSprites(this, menu_selector(ChillClientLayer::handleToggler), 1);
+        cps_counter_toggler->setPosition(size.width * 0.8, size.height * 0.5);
+        cps_counter_toggler->setScale(0.7);
+        cps_counter_toggler->setTag(10);
+        cps_counter_toggler->setZOrder(11);
+        cps_counter_toggler->toggle(cps_counter_toggled);
+        //ChillClientLayer::handleToggler(ac_bypass_toggler);
+        menu->addChild(cps_counter_toggler);*/
+    
         addChild(menu);
     }
 }
@@ -252,6 +300,9 @@ void ChillClientLayer::handleToggler(CCObject* sender) {
             break;
 
         case 3:
+            if (toggled) toggle_noclip(true);
+            noclip_toggled = toggled;
+            mod->setSavedValue<bool>("noclip", toggled);
             safe_mode_toggled = toggled;
             mod->setSavedValue<bool>("safe-mode", toggled);
             reset = true;
@@ -263,10 +314,11 @@ void ChillClientLayer::handleToggler(CCObject* sender) {
             mod->setSavedValue<bool>("noclip", toggled);
             safe_mode_toggled = toggled;
             mod->setSavedValue<bool>("safe-mode", toggled);
+            reset = true;
             break;
 
         case 5:
-            //toggle_practice_music(toggled);
+            toggle_practice_music(toggled);
             practice_music_toggled = toggled;
             mod->setSavedValue<bool>("practice-music", toggled);
             break;
@@ -294,6 +346,11 @@ void ChillClientLayer::handleToggler(CCObject* sender) {
             song_bypass_toggled = toggled;
             mod->setSavedValue<bool>("song-bypass", toggled);
             break;
+
+        case 10:
+            cps_counter_toggled = toggled;
+            mod->setSavedValue<bool>("cps-counter", toggled);
+            break;
         
         
         default:
@@ -318,5 +375,24 @@ class $modify(PlayLayer) {
             PlayLayer::levelComplete();
             reset = false;
         }
+    }
+
+    void resetLevel() {
+        PlayLayer::resetLevel();
+        if (not safe_mode_toggled) reset = false;
+    }
+
+    void update(float dt) {
+        PlayLayer::update(dt);
+        
+        auto now = std::chrono::system_clock::now();
+        previous = now;
+    }
+};
+
+class $modify(GJBaseGameLayer) {
+    void pushButton(int i, bool b) {
+        GJBaseGameLayer::pushButton(i, b);
+        clicks++;
     }
 };
